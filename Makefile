@@ -4,11 +4,12 @@ CLASS= cs143
 CLASSDIR= ../..
 LEXSRC= hello.c
 PARSRC= parser.c
+WARN = -Wno-write-strings
 		
 SRC= stack.cl README 
 LSRC= Makefile atoi.cl stack.test
 
-CC=gcc
+CC=g++
 CFLAGS=-g
 
 # %.c: %.o
@@ -17,8 +18,8 @@ CFLAGS=-g
 all: hello
 
 hello: ${CSRC}
-	${CC} -o lexer ${CFLAGS} ${LEXSRC}
-	${CC} -o parser ${CFLAGS} ${PARSRC}
+	${CC} -o lexer ${CFLAGS} ${LEXSRC} ${WARN}
+	${CC} -o parser ${CFLAGS} ${PARSRC} ${WARN}
 
 
 compile: stack.s
@@ -31,4 +32,4 @@ test:	compile
 	${CLASSDIR}/bin/spim -file stack.s < stack.test
 
 clean :
-	rm -f *.s core *~
+	rm -f parser lexer

@@ -5,10 +5,10 @@
 #include "utils_coolc.c"
 
 
-void main(int argc, char * argv[]){
+int main(int argc, char * argv[]){
     if(argc != 2){
         printf("Need file to compile");
-        return;
+        return 1;
     }
     FILE *fp;
     char buff[255];
@@ -19,7 +19,7 @@ void main(int argc, char * argv[]){
     while(fgets(buff, 255, fp)){
         if(matchLine(buff, i)){
             printf("ERROR Occured: Halting execution\n");
-            return;
+            return 1;
         }
     }
     matchLine("$", i);

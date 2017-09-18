@@ -21,6 +21,13 @@ char* strcpy(char* src, char* dest){
 // TODO: add match_token function
 // takes a Token enum and returns success, prints error "expect TOK"
 // needs TOK name string table
+int match_leaf(int token_type){
+    if(tokenArray[tokenCursor++].id == token_type){
+        return 1;
+    }else{
+        return 0;
+    }
+}
 
 //cool class production
 //cl_class_prd := class TYPE V { U }
@@ -39,12 +46,47 @@ int expression_prd(){
     return 1;
 }
 
-int U(){
-    if (expression_prd()){
-        return 1;
-    }
+int attribute_prd(){
+    return 0;
+}
+
+int formal_prd(){
     return 1;
 }
+
+int method_prd(){
+    int tempTokCursor = tokenCursor;
+    if(        tokenArray[tokenCursor++].id == COOL_ID
+            && tokenArray[tokenCursor++].id == OPEN_PAREN
+            && formal_prd()
+            && tokenArray[tokenCursor++].id == CLOSE_PAREN
+            && tokenArray[tokenCursor++].id == COLON
+            && tokenArray[tokenCursor++].id == COOL_TYPE
+            && tokenArray[tokenCursor++].id == OPEN_CURL
+            && expression_prd()
+            && tokenArray[tokenCursor++].id == CLOSE_CURL
+            ){
+        printf("method production\n");
+        return 1;
+    }
+    tokenCursor = tempTokCursor;
+    return 1;
+}
+
+int U(){
+    int tempTokCursor = tokenCursor;
+    if(attribute_prd()){
+        return 1;
+    }
+
+    tokenCursor = tempTokCursor;
+    if (method_prd()){
+        return 1;
+    }
+    tokenCursor = tempTokCursor;
+    return 1;
+}
+
 int cl_class_prd(){
     int tempTokCursor = tokenCursor;
     if(tokenArray[tokenCursor++].id == CLASS

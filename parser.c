@@ -21,7 +21,7 @@ char* strcpy(char* src, char* dest){
 // TODO: add match_token function
 // takes a Token enum and returns success, prints error "expect TOK"
 // needs TOK name string table
-int match_leaf(int token_type){
+int matchLeaf(int token_type){
     if(tokenArray[tokenCursor++].id == token_type){
         return 1;
     }else{
@@ -30,7 +30,7 @@ int match_leaf(int token_type){
 }
 
 //cool class production
-//cl_class_prd := class TYPE V { U }
+//cl_class_prd := class TYPE V { feature_list }
 //V := inherits TYPE || e
 int V(){
     int tempTokCursor = tokenCursor;
@@ -42,8 +42,16 @@ int V(){
     return 1;
 }
 
+//TODO:@jchristensen remove temp productions
+int tempIntPrd(){
+    if(matchLeaf(33)){
+        return 1;
+    }
+    return 0;
+}
+
 int expression_prd(){
-    return 1;
+    return tempIntPrd();
 }
 
 int attribute_prd(){
@@ -56,24 +64,26 @@ int formal_prd(){
 
 int method_prd(){
     int tempTokCursor = tokenCursor;
-    if(        tokenArray[tokenCursor++].id == COOL_ID
-            && tokenArray[tokenCursor++].id == OPEN_PAREN
+    if(        matchLeaf(COOL_ID)
+            && matchLeaf(OPEN_PAREN)
             && formal_prd()
-            && tokenArray[tokenCursor++].id == CLOSE_PAREN
-            && tokenArray[tokenCursor++].id == COLON
-            && tokenArray[tokenCursor++].id == COOL_TYPE
-            && tokenArray[tokenCursor++].id == OPEN_CURL
+            && matchLeaf(CLOSE_PAREN)
+            && matchLeaf(COLON)
+            && matchLeaf(COOL_TYPE)
+            && matchLeaf(OPEN_CURL)
             && expression_prd()
-            && tokenArray[tokenCursor++].id == CLOSE_CURL
-            ){
+            && matchLeaf(CLOSE_CURL)
+            && matchLeaf(SEMI_COLON)
+            )
+    {
         printf("method production\n");
         return 1;
     }
     tokenCursor = tempTokCursor;
-    return 1;
+    return 0;
 }
 
-int U(){
+int feature_list(){
     int tempTokCursor = tokenCursor;
     if(attribute_prd()){
         return 1;
@@ -93,11 +103,10 @@ int cl_class_prd(){
             && tokenArray[tokenCursor++].id == COOL_TYPE
             && V()
             && tokenArray[tokenCursor++].id == OPEN_CURL
-            && U()
+            && feature_list()
             && tokenArray[tokenCursor++].id == CLOSE_CURL
             && tokenArray[tokenCursor++].id == SEMI_COLON
             ){
-        printf("class ");
         return 1;
     }
     tokenCursor = tempTokCursor;
@@ -129,6 +138,7 @@ int main(int argc, char*argv[]){
     int tokIdx = 0;
     int tokId;
 
+    // Is this loop neccessary? can we have this as a "stream"?
     while(tokId != CL_EOF){
         getline(&line2, &n_chars, stdin);
         char* val;
@@ -136,14 +146,19 @@ int main(int argc, char*argv[]){
         if(tokId == COOL_ID
                 || tokId == COOL_TYPE){
             tempToken.data.name= stringTable;
-            stringTable = strcpy(line+2, stringTable);
+            stringTable = strcpy(line+2, stringTable); //TODO: remove magic number (token format?)
         }
         tempToken.id = tokId;
         tokenArray[tokIdx++] = tempToken;
     }
+
     numTokens = tokIdx;
     int retVal = matchProg();
-    printf("%d\n", retVal);
+
+    if(retVal){
+        printf("Program matched\n");
+    }
+
     return 1;
 }
 

@@ -1,9 +1,11 @@
 
 ASSN = 1
+BUILDIR = bin/
 CLASS= cs143
 CLASSDIR= ../..
-LEXSRC= hello.c
+LEXSRC= lexer.c
 PARSRC= parser.c
+TOKLISTSRC= tokenList.c
 WARN = -Wno-write-strings
 		
 SRC= stack.cl README 
@@ -18,8 +20,9 @@ CFLAGS=-g
 all: hello
 
 hello: ${CSRC}
-	${CC} -o lexer ${CFLAGS} ${LEXSRC} ${WARN}
-	${CC} -o parser ${CFLAGS} ${PARSRC} ${WARN}
+	${CC} -o ${BUILDIR}Lexer ${CFLAGS} ${LEXSRC} ${WARN}
+	${CC} -o ${BUILDIR}Parser ${CFLAGS} ${PARSRC} ${WARN}
+	${CC} -o ${BUILDIR}TokenList ${CFLAGS} ${TOKLISTSRC} ${WARN}
 
 
 compile: stack.s
@@ -32,4 +35,4 @@ test:	compile
 	${CLASSDIR}/bin/spim -file stack.s < stack.test
 
 clean :
-	rm -f parser lexer
+	rm -f Parser Lexer

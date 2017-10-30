@@ -111,6 +111,10 @@ void printTree(tokenNode* tok, int depth, StringTable *strTable)
     }
 }
 
+void printTree(AstState astState){
+    printTree(astState.tokenTable.buffer, 0, &astState.stringTable);
+}
+
 void resizeStringTable(StringTable* strTable)
 {
     char* newBuffer = (char*)malloc(2048);
@@ -125,7 +129,21 @@ void resizeStringTable(StringTable* strTable)
     strTable->writePtr = newWritePtr;
 }
 
-#if 1 //Test case
+
+AstState initAstState(AstState astState) {
+    astState.stringTable.numEntries = 0;
+    astState.stringTable.capacity = INIT_STRING_TABLE_SIZE;
+    astState.stringTable.buffer = (char*)malloc(INIT_STRING_TABLE_SIZE*sizeof(char));
+    astState.stringTable.writePtr = astState.stringTable.buffer;
+
+    astState.tokenTable.capacity = INIT_TOK_BUF_SIZE;
+    astState.tokenTable.numEntries = 0;
+    astState.tokenTable.buffer = (tokenNode*)malloc(INIT_TOK_BUF_SIZE*sizeof(tokenNode));
+    astState.tokenTable.writePtr = astState.tokenTable.buffer;
+    return astState;
+}
+
+#if 0 //Test case
 int main()
 {
     StringTable stringTable;

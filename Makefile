@@ -23,7 +23,7 @@ all: hello
 hello: ${CSRC}
 	${CC} -o ${BUILDIR}Lexer ${CFLAGS} ${SOURCEFOLDER}${LEXSRC} ${WARN}
 	${CC} -o ${BUILDIR}Parser ${CFLAGS} ${SOURCEFOLDER}${PARSRC} ${WARN}
-	${CC} -o ${BUILDIR}TokenList ${CFLAGS} ${SOURCEFOLDER}${TOKLISTSRC} ${WARN}
+# ${CC} -o ${BUILDIR}TokenList ${CFLAGS} ${SOURCEFOLDER}${TOKLISTSRC} ${WARN}
 
 
 compile: stack.s

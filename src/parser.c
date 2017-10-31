@@ -112,7 +112,7 @@ int feature_list(){
     return 1;
 }
 
-int cl_class_prd(tokenNode* parent, AstState astState){
+int cl_class_prd(tokenNode* parent, AstState* astState){
     int tempTokCursor = tokenCursor;
     char* name;
     
@@ -127,7 +127,7 @@ int cl_class_prd(tokenNode* parent, AstState astState){
                 && tokenArray[tokenCursor++].id == SEMI_COLON
             ){
 
-                appendNode(parent, name, &astState);
+                appendNode(parent, name, astState);
 
                 return 1;
             }
@@ -138,7 +138,7 @@ int cl_class_prd(tokenNode* parent, AstState astState){
 
 // Program := T$
 // T := cl_class_prd T | e
-int T(tokenNode* parent, AstState astState){
+int T(tokenNode* parent, AstState* astState){
     // TODO: do I add the token to the Tree before or after it matches, it might only match if children match, so adding it first might be necessary. Removing later is an option.
     if(cl_class_prd(parent, astState)){
         T(parent, astState);
@@ -146,11 +146,11 @@ int T(tokenNode* parent, AstState astState){
     return 1;
 }
 
-int matchProg(AstState astState){
+int matchProg(AstState* astState){
     
-    tokenNode* prgNode = astState.tokenTable.writePtr++;
+    tokenNode* prgNode = astState->tokenTable.writePtr++;
 //TODO: write init that doesn;t require a Node and takes an AstState
-    initToken("Program", prgNode, &astState.stringTable); 
+    initToken("Program", prgNode, &astState->stringTable);
 
     if(T(prgNode, astState) && tokenArray[tokenCursor].id == CL_EOF){
         return 1;
@@ -181,9 +181,9 @@ int main(int argc, char*argv[]){
         tempToken.id = tokId;
         tokenArray[tokIdx++] = tempToken;
     }
-
-    AstState astState;
-    astState = initAstState(astState);
+    AstState _astState;
+    AstState* astState = &_astState;
+    initAstState(astState);
     numTokens = tokIdx;
     int retVal = matchProg(astState);
     printHeader("Parse Tree");

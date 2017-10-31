@@ -1,6 +1,6 @@
 bin/
-Compiler.config
-Compiler.creator
-Compiler.creator.user
-Compiler.files
-Compiler.includes
+coolc.config
+coolc.creator
+coolc.creator.user
+coolc.files
+coolc.includes

@@ -1,3 +1,12 @@
+char* strcpy(char* src, char* dest){
+    char* save_dest = dest;
+    while(*src){
+        *dest++ = *src++;
+    }
+    *dest++ = *src++;
+    return dest;
+}
+
 int strLen(char* str){
     int letterCount = 0;
     while(*str != 0){

@@ -26,14 +26,6 @@ AstState initAst(){
     return astState;
 }
 
-char* strcpy(char* src, char* dest){
-    char* save_dest = dest;
-    while(*src){
-        *dest++ = *src++;
-    }
-    *dest++ = *src++;
-    return dest;
-}
 // TODO: add match_token function
 // takes a Token enum and returns success, prints error "expect TOK"
 // needs TOK name string table
